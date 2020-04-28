@@ -10,10 +10,10 @@ import torch.optim as optim
 
 class Net(nn.Module):
 
-    def __init__(self):
+    def __init__(self, hiddenDim = 300):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(300,300)  # 6*6 from image dimension
-        self.fc2 = nn.Linear(300, 2)
+        self.fc1 = nn.Linear(300,hiddenDim)  # 6*6 from image dimension
+        self.fc2 = nn.Linear(hiddenDim, 2)
         self.softmax =  nn.Softmax(dim = 1)
 
     def forward(self, x):
@@ -45,20 +45,18 @@ class Net(nn.Module):
             ys = []
             for i, data in enumerate(dataloader, 0):
                 x = data
-                # print(x)
                 output = self.forward(x).detach().numpy()[0]
                 y_star = np.argmax(output)
-                #print(y_star)
                 y_stars.append(y_star)
 
         return ys, y_stars
 
-    def train(self, data, dev):
+    def train(self, data, dev, verbose = True):
         trainloader = torch.utils.data.DataLoader(data, batch_size = 5000)
         criterion = nn.CrossEntropyLoss()
         # create your optimizer
         optimizer = optim.Adam(self.parameters(), lr=0.01)
-        for epoch in range(100):  # loop over the dataset multiple times
+        for epoch in range(10):  # loop over the dataset multiple times
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
                 # get the inputs; data is a list of [inputs, labels]
@@ -75,8 +73,11 @@ class Net(nn.Module):
                 
                 # print statistics
                 running_loss += loss.item()
-                if i % 1 == 0: # print every 2000 mini-batches
+                if verbose and (i % 1 == 0): # print every 2000 mini-batches
                     ys, y_stars = self.get_eval_data(dev)
                     print('[%d, %5d] loss: %.3f\tDev FI: %.3f' % (epoch + 1, i + 1, running_loss, f1(ys, y_stars)))
                     running_loss = 0.0
         print('Finished Training.')
+
+if __name__ == '__main__':
+    print('Whoops, no main method built out.')

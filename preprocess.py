@@ -7,7 +7,7 @@ import string
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
-def processing (sentence):
+def processing (sentence, lower = True, stop_words = False, stem = False):
     """
     given: a sentence in the form of a string
     returns: a list of constituent words after removing numbers, special characters,
@@ -16,13 +16,17 @@ def processing (sentence):
     stop_words = stopwords.words('english')
     porter = PorterStemmer()
 
-    result = sentence.lower() #Lower case 
+    result = sentence
+    if lower:
+        result = result.lower() #Lower case 
     result = re.sub(r'\d+', '', result) #Removing numbers
     result = result.translate(str.maketrans('', '', string.punctuation)) #Remove weird characters
     result = result.strip() #Eliminate blanks from begining and end of setences
     result = result.split() #Separate into words
-    result = [w for w in result if not w in stop_words] #Eliminate stop_words
-    # result = [porter.stem(word) for word in result] #Stem Words
+    if not stop_words:
+        result = [w for w in result if not w in stop_words] #Eliminate stop_words
+    if stem:
+        result = [porter.stem(word) for word in result] #Stem Words
     return (result)
 
 def tweet_vec (tweet, word2vec):
@@ -36,9 +40,19 @@ def tweet_vec (tweet, word2vec):
     else:
         return None
 
-
-
-
+if __name__ == '__main__':
+    """
+    testing optional arguments to preprocess
+    """
+    import pandas as pd
+    import random
+    twt = pd.read_csv('train.csv')
+    twt = twt.set_index('id')
+    text = twt['text'].to_list()
+    prep_text = [processing(i, lower = False) for i in text]
+    print(random.choice(prep_text))
+    print(random.choice(prep_text)) 
+    print(random.choice(prep_text))
 
 
 
