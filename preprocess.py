@@ -10,7 +10,7 @@ from nltk.stem.porter import PorterStemmer
 def processing (sentence, lower = True, stop_words = False, stem = False):
     """
     given: a sentence in the form of a string
-    returns: a list of constituent words after removing numbers, special characters,
+    returns: a list of constituent   words after removing numbers, special characters,
         stop words, etc.
     """
     stop_words = stopwords.words('english')

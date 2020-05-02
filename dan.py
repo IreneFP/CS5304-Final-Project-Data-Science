@@ -51,12 +51,15 @@ class Net(nn.Module):
 
         return ys, y_stars
 
-    def train(self, data, dev, verbose = True):
+    def train(self, data, dev, verbose = True, opter = 'adam', lr = 0.01, epochs = 100):
         trainloader = torch.utils.data.DataLoader(data, batch_size = 5000)
         criterion = nn.CrossEntropyLoss()
         # create your optimizer
-        optimizer = optim.Adam(self.parameters(), lr=0.01)
-        for epoch in range(10):  # loop over the dataset multiple times
+        if opter == 'adam':
+            optimizer = optim.Adam(self.parameters(), lr=lr)
+        elif opter == 'sgd':
+            optimizer = optim.SGD(self.parameters(), lr = lr)
+        for epoch in range(epochs):  # loop over the dataset multiple times
             running_loss = 0.0
             for i, data in enumerate(trainloader, 0):
                 # get the inputs; data is a list of [inputs, labels]
@@ -74,10 +77,11 @@ class Net(nn.Module):
                 # print statistics
                 running_loss += loss.item()
                 if verbose and (i % 1 == 0): # print every 2000 mini-batches
+
                     ys, y_stars = self.get_eval_data(dev)
                     print('[%d, %5d] loss: %.3f\tDev FI: %.3f' % (epoch + 1, i + 1, running_loss, f1(ys, y_stars)))
                     running_loss = 0.0
-        print('Finished Training.')
+        # print('Finished Training.')
 
 if __name__ == '__main__':
-    print('Whoops, no main method built out.')
+    print('whoops, no main block')
