@@ -10,22 +10,15 @@ import itertools
 import matplotlib.pyplot as plt
 from plot_metric.functions import BinaryClassification
 
-import re
-import string
-import random
-
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
-
 # The below part should be pasted under Dev Performance
 # dev[0]
+"""
 ys, y_stars = net.get_eval_data(dev)
 cm = confmat(ys, y_stars, normalize='true')
 print(cm)
 target_names = [0, 1]
-# print(f1(ys, y_stars))
-
+print(f1(ys, y_stars))
+"""
 def plot_confusion_matrix(cm,
                           target_names,
                           title='Confusion matrix',
@@ -70,11 +63,12 @@ def plot_confusion_matrix(cm,
     plt.show()
 
 # Plot the confusion matrix
-plot_confusion_matrix(cm, target_names)
+# plot_confusion_matrix(cm, target_names)
 
 
-# Two ways of plotting the ROC Curve
-# ROC Curve - Style 1
+# # Two ways of plotting the ROC Curve
+"""
+# # ROC Curve - Style 1
 fpr, tpr, _ = roc_curve(ys, y_stars)
 auc = roc_auc_score(ys, y_stars)
 plt.figure(figsize=(8,6))
@@ -91,7 +85,8 @@ plt.show()
 # ROC Curve Visualisation with plot_metric
 bc = BinaryClassification(ys, y_stars, labels=[0, 1])
 
-# Figures
+# # Figures
 plt.figure(figsize=(8,6))
 bc.plot_roc_curve()
 plt.show()
+"""
